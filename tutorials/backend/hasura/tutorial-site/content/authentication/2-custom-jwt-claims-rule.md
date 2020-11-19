@@ -16,13 +16,14 @@ Add the following script to the rule.
 ```javascript
 function (user, context, callback) {
   const namespace = "https://hasura.io/jwt/claims";
-  context.accessToken[namespace] =
-    {
-      'x-hasura-default-role': 'user',
-      // do some custom logic to decide allowed roles
-      'x-hasura-allowed-roles': ['user'],
-      'x-hasura-user-id': user.user_id
-    };
+  const augmentation = {
+    'x-hasura-default-role': 'user',
+    // do some custom logic to decide allowed roles
+    'x-hasura-allowed-roles': ['user'],
+    'x-hasura-user-id': user.user_id
+  };
+  context.accessToken[namespace] = augmentation;
+  context.idToken[namespace] = augmentation;
   callback(null, user, context);
 }
 ```
